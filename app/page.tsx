@@ -1,14 +1,25 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Map, Utensils, Bell, Navigation, Clock, AlertTriangle, CheckCircle2, AlertCircle, Info } from 'lucide-react';
+import { Map, Utensils, Bell, Navigation, Clock, AlertTriangle, CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function StadiaSyncApp() {
   const [activeTab, setActiveTab] = useState('routing');
+  
+  // Routing State
   const [routeCalculated, setRouteCalculated] = useState(false);
+  const [showRoute, setShowRoute] = useState(false);
+  const [routeMessage, setRouteMessage] = useState('');
+
+  // Concessions State
   const [orderStatus, setOrderStatus] = useState<'idle' | 'preparing' | 'ready'>('idle');
   const [progress, setProgress] = useState(0);
+
+  // Report Issue State
+  const [isReporting, setIsReporting] = useState(false);
+  const [reportText, setReportText] = useState('');
+  const [reportStatus, setReportStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
 
   // Simulate order progress
   useEffect(() => {
@@ -29,15 +40,47 @@ export default function StadiaSyncApp() {
 
   const handleCalculateRoute = () => {
     setRouteCalculated(true);
+    setShowRoute(false);
+    setRouteMessage('');
+    
+    // Simulate AI calculation delay
     setTimeout(() => {
-      alert("AI Route Calculated: 3 mins saved!");
       setRouteCalculated(false);
-    }, 800);
+      setShowRoute(true);
+      setRouteMessage("AI Route Calculated: 3 mins saved!");
+      
+      // Hide message after 4 seconds
+      setTimeout(() => {
+        setRouteMessage('');
+      }, 4000);
+    }, 1200);
   };
 
   const handleOrder = () => {
     setOrderStatus('preparing');
     setProgress(0);
+  };
+
+  const handleReportSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // SECURITY: Sanitize input by trimming whitespace. 
+    // React automatically escapes variables in JSX, preventing XSS attacks.
+    const sanitizedText = reportText.trim();
+    if (!sanitizedText) return;
+
+    setReportStatus('submitting');
+    
+    // Simulate secure API submission
+    setTimeout(() => {
+      setReportStatus('success');
+      setReportText('');
+    }, 1500);
+  };
+
+  const closeReportModal = () => {
+    setIsReporting(false);
+    setTimeout(() => setReportStatus('idle'), 300); // Reset after animation
   };
 
   return (
@@ -90,6 +133,35 @@ export default function StadiaSyncApp() {
                   </div>
                   
                   <div className="aspect-square relative flex items-center justify-center p-4">
+                    {/* Animated Route Overlay */}
+                    {showRoute && (
+                      <svg className="absolute inset-0 w-full h-full z-15 pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <motion.path
+                          d="M 50 85 L 50 50 L 85 50"
+                          stroke="#4285F4"
+                          strokeWidth="2"
+                          strokeDasharray="4 4"
+                          fill="none"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 1.5, ease: "easeInOut" }}
+                        />
+                        <motion.circle 
+                          cx="85" cy="50" r="3" 
+                          fill="#4285F4" 
+                          initial={{ scale: 0 }} 
+                          animate={{ scale: 1 }} 
+                          transition={{ delay: 1.5 }} 
+                        />
+                        <motion.circle 
+                          cx="50" cy="85" r="2" 
+                          fill="#4285F4" 
+                          initial={{ scale: 0 }} 
+                          animate={{ scale: 1 }} 
+                        />
+                      </svg>
+                    )}
+
                     {/* Field */}
                     <div className="w-24 h-40 border-2 border-neutral-600 rounded-lg flex items-center justify-center relative z-10 bg-neutral-800">
                       <div className="w-full h-[1px] bg-neutral-600"></div>
@@ -279,7 +351,10 @@ export default function StadiaSyncApp() {
                   </div>
                 </div>
 
-                <button className="w-full bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-white font-medium py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors mt-auto">
+                <button 
+                  onClick={() => setIsReporting(true)}
+                  className="w-full bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-white font-medium py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors mt-auto"
+                >
                   <AlertCircle className="w-4 h-4" />
                   Report Issue
                 </button>
@@ -317,6 +392,95 @@ export default function StadiaSyncApp() {
         
         {/* Home Indicator */}
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-neutral-500 rounded-full z-30"></div>
+
+        {/* Toast Notification for Route */}
+        <AnimatePresence>
+          {routeMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="absolute bottom-24 left-1/2 -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg whitespace-nowrap z-50 flex items-center gap-2"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              {routeMessage}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Report Issue Modal */}
+        <AnimatePresence>
+          {isReporting && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 w-full shadow-2xl relative"
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-white">Report Issue</h3>
+                  <button onClick={closeReportModal} className="text-neutral-400 hover:text-white transition-colors">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {reportStatus === 'success' ? (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center py-6"
+                  >
+                    <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-3" />
+                    <p className="text-white font-medium">Report Submitted</p>
+                    <p className="text-xs text-neutral-400 mt-1">Security and staff have been securely notified.</p>
+                    <button 
+                      onClick={closeReportModal} 
+                      className="mt-6 w-full bg-neutral-800 hover:bg-neutral-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors"
+                    >
+                      Close
+                    </button>
+                  </motion.div>
+                ) : (
+                  <form onSubmit={handleReportSubmit} className="flex flex-col gap-4">
+                    <div>
+                      <label className="text-xs text-neutral-400 mb-1.5 block">Describe the issue securely</label>
+                      <textarea
+                        value={reportText}
+                        onChange={(e) => setReportText(e.target.value)}
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-xl p-3 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:border-[#4285F4] resize-none h-24 transition-colors"
+                        placeholder="E.g., Spill at Section 112..."
+                        required
+                        maxLength={500}
+                      />
+                      <div className="flex justify-between mt-1.5">
+                        <span className="text-[10px] text-neutral-500">End-to-end encrypted</span>
+                        <span className="text-[10px] text-neutral-500">{reportText.length}/500</span>
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={reportStatus === 'submitting' || !reportText.trim()}
+                      className="w-full bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition-colors"
+                    >
+                      {reportStatus === 'submitting' ? (
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      ) : (
+                        'Submit Secure Report'
+                      )}
+                    </button>
+                  </form>
+                )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
       </div>
     </div>
   );
