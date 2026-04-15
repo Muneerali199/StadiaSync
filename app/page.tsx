@@ -89,7 +89,7 @@ export default function StadiaSyncApp() {
       <div className="w-full max-w-[400px] h-[800px] max-h-[90vh] bg-neutral-900 rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col relative border-[8px] border-neutral-800">
         
         {/* Status Bar (Simulated) */}
-        <div className="h-7 w-full flex justify-between items-center px-6 pt-2 text-xs font-medium text-neutral-400 z-20">
+        <div className="h-7 w-full flex justify-between items-center px-6 pt-2 text-xs font-medium text-neutral-400 z-20" aria-hidden="true">
           <span>9:41</span>
           <div className="flex gap-1.5 items-center">
             <div className="w-4 h-3 bg-neutral-400 rounded-sm"></div>
@@ -101,13 +101,13 @@ export default function StadiaSyncApp() {
         {/* Header */}
         <header className="px-6 pt-6 pb-4 bg-neutral-900 z-10">
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <span className="text-[#4285F4]">Stadia</span>Sync <span className="text-xs px-2 py-0.5 bg-[#4285F4]/20 text-[#4285F4] rounded-full uppercase tracking-wider font-bold">AI</span>
+            <span className="text-[#4285F4]">Stadia</span>Sync <span className="text-xs px-2 py-0.5 bg-[#4285F4]/20 text-[#4285F4] rounded-full uppercase tracking-wider font-bold" aria-label="Artificial Intelligence">AI</span>
           </h1>
           <p className="text-sm text-neutral-400 mt-1">MetLife Stadium • Event in progress</p>
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto overflow-x-hidden relative scrollbar-hide">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden relative scrollbar-hide" aria-live="polite">
           <AnimatePresence mode="wait">
             {activeTab === 'routing' && (
               <motion.div
@@ -120,22 +120,22 @@ export default function StadiaSyncApp() {
               >
                 <div className="flex justify-between items-center">
                   <h2 className="text-lg font-semibold">Smart Routing</h2>
-                  <div className="flex items-center gap-2 text-xs bg-neutral-800 px-3 py-1.5 rounded-full">
+                  <div className="flex items-center gap-2 text-xs bg-neutral-800 px-3 py-1.5 rounded-full" aria-label="Live Updates Active">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
                     Live Updates
                   </div>
                 </div>
 
                 {/* Stadium Map Visualization */}
-                <div className="bg-neutral-800 rounded-2xl p-4 border border-neutral-700/50 relative overflow-hidden">
+                <div className="bg-neutral-800 rounded-2xl p-4 border border-neutral-700/50 relative overflow-hidden" aria-label="Stadium Map Visualization">
                   <div className="absolute top-2 right-2 bg-neutral-900/80 backdrop-blur text-[10px] px-2 py-1 rounded text-neutral-300 flex items-center gap-1 z-20">
-                    <Info className="w-3 h-3" /> Crowd Density
+                    <Info className="w-3 h-3" aria-hidden="true" /> Crowd Density
                   </div>
                   
                   <div className="aspect-square relative flex items-center justify-center p-4">
                     {/* Animated Route Overlay */}
                     {showRoute && (
-                      <svg className="absolute inset-0 w-full h-full z-15 pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <svg className="absolute inset-0 w-full h-full z-15 pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                         <motion.path
                           d="M 50 85 L 50 50 L 85 50"
                           stroke="#4285F4"
@@ -191,25 +191,26 @@ export default function StadiaSyncApp() {
                 </div>
 
                 {/* Legend */}
-                <div className="flex justify-center gap-4 text-xs text-neutral-400">
-                  <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-green-500/50 border border-green-500"></div> Low</div>
-                  <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-yellow-500/50 border border-yellow-500"></div> Medium</div>
-                  <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-red-500/50 border border-red-500"></div> High</div>
+                <div className="flex justify-center gap-4 text-xs text-neutral-400" aria-label="Crowd Density Legend">
+                  <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-green-500/50 border border-green-500" aria-hidden="true"></div> Low</div>
+                  <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-yellow-500/50 border border-yellow-500" aria-hidden="true"></div> Medium</div>
+                  <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-red-500/50 border border-red-500" aria-hidden="true"></div> High</div>
                 </div>
 
                 <button 
                   onClick={handleCalculateRoute}
                   disabled={routeCalculated}
-                  className="w-full bg-[#4285F4] hover:bg-[#3367D6] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors active:scale-[0.98]"
+                  aria-busy={routeCalculated}
+                  className="w-full bg-[#4285F4] hover:bg-[#3367D6] text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors active:scale-[0.98] disabled:opacity-80"
                 >
                   {routeCalculated ? (
                     <motion.div className="flex items-center gap-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" aria-hidden="true"></div>
                       Calculating...
                     </motion.div>
                   ) : (
                     <>
-                      <Navigation className="w-5 h-5" />
+                      <Navigation className="w-5 h-5" aria-hidden="true" />
                       Find Fastest Route to Seat
                     </>
                   )}
@@ -228,13 +229,13 @@ export default function StadiaSyncApp() {
               >
                 <div className="flex justify-between items-center">
                   <h2 className="text-lg font-semibold">Zero-Wait Concessions</h2>
-                  <Clock className="w-5 h-5 text-neutral-400" />
+                  <Clock className="w-5 h-5 text-neutral-400" aria-hidden="true" />
                 </div>
 
                 <div className="flex flex-col gap-4">
                   {/* Option 1 - Fastest */}
                   <div className="bg-neutral-800 rounded-2xl p-4 border border-[#4285F4]/30 relative overflow-hidden group">
-                    <div className="absolute top-0 left-0 w-1 h-full bg-[#4285F4]"></div>
+                    <div className="absolute top-0 left-0 w-1 h-full bg-[#4285F4]" aria-hidden="true"></div>
                     <div className="flex justify-between items-start mb-3 pl-2">
                       <div>
                         <h3 className="font-semibold text-white flex items-center gap-2">
@@ -244,27 +245,27 @@ export default function StadiaSyncApp() {
                         <p className="text-xs text-neutral-400 mt-1">Section 114 • 200ft away</p>
                       </div>
                       <div className="text-right">
-                        <div className="text-[#4285F4] font-bold text-lg">2 min</div>
-                        <div className="text-[10px] text-neutral-500">Wait time</div>
+                        <div className="text-[#4285F4] font-bold text-lg" aria-label="Wait time: 2 minutes">2 min</div>
+                        <div className="text-[10px] text-neutral-500" aria-hidden="true">Wait time</div>
                       </div>
                     </div>
                     
                     {orderStatus === 'idle' ? (
                       <button 
                         onClick={handleOrder}
-                        className="w-full mt-2 bg-neutral-700 hover:bg-neutral-600 text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
+                        className="w-full mt-2 bg-neutral-700 hover:bg-neutral-600 text-white text-sm font-medium py-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-[#4285F4] focus:outline-none"
                       >
                         Order Now
                       </button>
                     ) : (
-                      <div className="mt-4">
+                      <div className="mt-4" aria-live="assertive">
                         <div className="flex justify-between text-xs mb-1.5">
                           <span className="text-[#4285F4] font-medium">
                             {orderStatus === 'preparing' ? 'Preparing order...' : 'Ready for pickup!'}
                           </span>
                           <span className="text-neutral-400">{progress}%</span>
                         </div>
-                        <div className="w-full bg-neutral-900 rounded-full h-2 overflow-hidden">
+                        <div className="w-full bg-neutral-900 rounded-full h-2 overflow-hidden" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
                           <motion.div 
                             className={`h-full ${orderStatus === 'ready' ? 'bg-green-500' : 'bg-[#4285F4]'}`}
                             initial={{ width: 0 }}
@@ -284,8 +285,8 @@ export default function StadiaSyncApp() {
                         <p className="text-xs text-neutral-500 mt-1">Section 112 • 450ft away</p>
                       </div>
                       <div className="text-right">
-                        <div className="text-yellow-500 font-bold text-lg">12 min</div>
-                        <div className="text-[10px] text-neutral-500">Wait time</div>
+                        <div className="text-yellow-500 font-bold text-lg" aria-label="Wait time: 12 minutes">12 min</div>
+                        <div className="text-[10px] text-neutral-500" aria-hidden="true">Wait time</div>
                       </div>
                     </div>
                   </div>
@@ -298,8 +299,8 @@ export default function StadiaSyncApp() {
                         <p className="text-xs text-neutral-500 mt-1">Gate A • 800ft away</p>
                       </div>
                       <div className="text-right">
-                        <div className="text-red-500 font-bold text-lg">25 min</div>
-                        <div className="text-[10px] text-neutral-500">Wait time</div>
+                        <div className="text-red-500 font-bold text-lg" aria-label="Wait time: 25 minutes">25 min</div>
+                        <div className="text-[10px] text-neutral-500" aria-hidden="true">Wait time</div>
                       </div>
                     </div>
                   </div>
@@ -318,44 +319,44 @@ export default function StadiaSyncApp() {
               >
                 <div className="flex justify-between items-center">
                   <h2 className="text-lg font-semibold">Live Event Sync</h2>
-                  <div className="w-2 h-2 rounded-full bg-red-500 animate-ping"></div>
+                  <div className="w-2 h-2 rounded-full bg-red-500 animate-ping" aria-label="Live connection active"></div>
                 </div>
 
                 {/* Alert Feed */}
-                <div className="flex-1 flex flex-col gap-3 overflow-y-auto pr-2 -mr-2">
-                  <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex gap-3 items-start">
-                    <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                <div className="flex-1 flex flex-col gap-3 overflow-y-auto pr-2 -mr-2" role="feed" aria-label="Live Venue Updates">
+                  <article className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex gap-3 items-start">
+                    <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" aria-hidden="true" />
                     <div>
                       <h4 className="text-sm font-semibold text-red-400">Gate Congestion</h4>
                       <p className="text-xs text-neutral-300 mt-1 leading-relaxed">Gate C is currently congested with a 15-minute delay. Please use Gate D for faster entry.</p>
                       <span className="text-[10px] text-neutral-500 mt-2 block">Just now</span>
                     </div>
-                  </div>
+                  </article>
 
-                  <div className="bg-[#4285F4]/10 border border-[#4285F4]/20 rounded-xl p-4 flex gap-3 items-start">
-                    <Info className="w-5 h-5 text-[#4285F4] shrink-0 mt-0.5" />
+                  <article className="bg-[#4285F4]/10 border border-[#4285F4]/20 rounded-xl p-4 flex gap-3 items-start">
+                    <Info className="w-5 h-5 text-[#4285F4] shrink-0 mt-0.5" aria-hidden="true" />
                     <div>
                       <h4 className="text-sm font-semibold text-[#4285F4]">Halftime Show Prep</h4>
                       <p className="text-xs text-neutral-300 mt-1 leading-relaxed">Restrooms near Section 110-120 will be closed in 10 minutes for halftime preparations.</p>
                       <span className="text-[10px] text-neutral-500 mt-2 block">5 mins ago</span>
                     </div>
-                  </div>
+                  </article>
 
-                  <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 flex gap-3 items-start">
-                    <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                  <article className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 flex gap-3 items-start">
+                    <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" aria-hidden="true" />
                     <div>
                       <h4 className="text-sm font-semibold text-green-400">Weather Update</h4>
                       <p className="text-xs text-neutral-300 mt-1 leading-relaxed">Rain has cleared. The roof will remain open for the remainder of the event.</p>
                       <span className="text-[10px] text-neutral-500 mt-2 block">12 mins ago</span>
                     </div>
-                  </div>
+                  </article>
                 </div>
 
                 <button 
                   onClick={() => setIsReporting(true)}
-                  className="w-full bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-white font-medium py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors mt-auto"
+                  className="w-full bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-white font-medium py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors mt-auto focus:ring-2 focus:ring-[#4285F4] focus:outline-none"
                 >
-                  <AlertCircle className="w-4 h-4" />
+                  <AlertCircle className="w-4 h-4" aria-hidden="true" />
                   Report Issue
                 </button>
               </motion.div>
@@ -364,45 +365,53 @@ export default function StadiaSyncApp() {
         </main>
 
         {/* Bottom Navigation */}
-        <nav className="bg-neutral-900 border-t border-neutral-800 px-6 py-4 pb-8 z-20">
+        <nav className="bg-neutral-900 border-t border-neutral-800 px-6 py-4 pb-8 z-20" aria-label="Bottom Navigation">
           <div className="flex justify-between items-center">
             <button 
               onClick={() => setActiveTab('routing')}
-              className={`flex flex-col items-center gap-1.5 transition-colors ${activeTab === 'routing' ? 'text-[#4285F4]' : 'text-neutral-500 hover:text-neutral-300'}`}
+              aria-label="Smart Routing Tab"
+              aria-current={activeTab === 'routing' ? 'page' : undefined}
+              className={`flex flex-col items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4285F4] rounded-lg p-1 ${activeTab === 'routing' ? 'text-[#4285F4]' : 'text-neutral-500 hover:text-neutral-300'}`}
             >
-              <Map className="w-6 h-6" />
+              <Map className="w-6 h-6" aria-hidden="true" />
               <span className="text-[10px] font-medium">Routing</span>
             </button>
             <button 
               onClick={() => setActiveTab('concessions')}
-              className={`flex flex-col items-center gap-1.5 transition-colors ${activeTab === 'concessions' ? 'text-[#4285F4]' : 'text-neutral-500 hover:text-neutral-300'}`}
+              aria-label="Zero-Wait Concessions Tab"
+              aria-current={activeTab === 'concessions' ? 'page' : undefined}
+              className={`flex flex-col items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4285F4] rounded-lg p-1 ${activeTab === 'concessions' ? 'text-[#4285F4]' : 'text-neutral-500 hover:text-neutral-300'}`}
             >
-              <Utensils className="w-6 h-6" />
+              <Utensils className="w-6 h-6" aria-hidden="true" />
               <span className="text-[10px] font-medium">Food</span>
             </button>
             <button 
               onClick={() => setActiveTab('sync')}
-              className={`flex flex-col items-center gap-1.5 transition-colors ${activeTab === 'sync' ? 'text-[#4285F4]' : 'text-neutral-500 hover:text-neutral-300'}`}
+              aria-label="Live Event Sync Tab"
+              aria-current={activeTab === 'sync' ? 'page' : undefined}
+              className={`flex flex-col items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4285F4] rounded-lg p-1 ${activeTab === 'sync' ? 'text-[#4285F4]' : 'text-neutral-500 hover:text-neutral-300'}`}
             >
-              <Bell className="w-6 h-6" />
+              <Bell className="w-6 h-6" aria-hidden="true" />
               <span className="text-[10px] font-medium">Live Sync</span>
             </button>
           </div>
         </nav>
         
         {/* Home Indicator */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-neutral-500 rounded-full z-30"></div>
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-neutral-500 rounded-full z-30" aria-hidden="true"></div>
 
         {/* Toast Notification for Route */}
         <AnimatePresence>
           {routeMessage && (
             <motion.div
+              role="alert"
+              aria-live="assertive"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
               className="absolute bottom-24 left-1/2 -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg whitespace-nowrap z-50 flex items-center gap-2"
             >
-              <CheckCircle2 className="w-4 h-4" />
+              <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
               {routeMessage}
             </motion.div>
           )}
@@ -416,6 +425,9 @@ export default function StadiaSyncApp() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="modal-title"
             >
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
@@ -424,9 +436,13 @@ export default function StadiaSyncApp() {
                 className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 w-full shadow-2xl relative"
               >
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold text-white">Report Issue</h3>
-                  <button onClick={closeReportModal} className="text-neutral-400 hover:text-white transition-colors">
-                    <X className="w-5 h-5" />
+                  <h3 id="modal-title" className="text-lg font-semibold text-white">Report Issue</h3>
+                  <button 
+                    onClick={closeReportModal} 
+                    aria-label="Close report modal"
+                    className="text-neutral-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#4285F4] rounded-md"
+                  >
+                    <X className="w-5 h-5" aria-hidden="true" />
                   </button>
                 </div>
 
@@ -435,13 +451,14 @@ export default function StadiaSyncApp() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center py-6"
+                    role="alert"
                   >
-                    <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-3" />
+                    <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-3" aria-hidden="true" />
                     <p className="text-white font-medium">Report Submitted</p>
                     <p className="text-xs text-neutral-400 mt-1">Security and staff have been securely notified.</p>
                     <button 
                       onClick={closeReportModal} 
-                      className="mt-6 w-full bg-neutral-800 hover:bg-neutral-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors"
+                      className="mt-6 w-full bg-neutral-800 hover:bg-neutral-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#4285F4]"
                     >
                       Close
                     </button>
@@ -449,27 +466,30 @@ export default function StadiaSyncApp() {
                 ) : (
                   <form onSubmit={handleReportSubmit} className="flex flex-col gap-4">
                     <div>
-                      <label className="text-xs text-neutral-400 mb-1.5 block">Describe the issue securely</label>
+                      <label htmlFor="issue-description" className="text-xs text-neutral-400 mb-1.5 block">Describe the issue securely</label>
                       <textarea
+                        id="issue-description"
                         value={reportText}
                         onChange={(e) => setReportText(e.target.value)}
-                        className="w-full bg-neutral-800 border border-neutral-700 rounded-xl p-3 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:border-[#4285F4] resize-none h-24 transition-colors"
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-xl p-3 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:border-[#4285F4] focus:ring-1 focus:ring-[#4285F4] resize-none h-24 transition-colors"
                         placeholder="E.g., Spill at Section 112..."
                         required
                         maxLength={500}
+                        aria-describedby="encryption-notice char-count"
                       />
                       <div className="flex justify-between mt-1.5">
-                        <span className="text-[10px] text-neutral-500">End-to-end encrypted</span>
-                        <span className="text-[10px] text-neutral-500">{reportText.length}/500</span>
+                        <span id="encryption-notice" className="text-[10px] text-neutral-500">End-to-end encrypted</span>
+                        <span id="char-count" className="text-[10px] text-neutral-500" aria-live="polite">{reportText.length}/500</span>
                       </div>
                     </div>
                     <button
                       type="submit"
                       disabled={reportStatus === 'submitting' || !reportText.trim()}
-                      className="w-full bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition-colors"
+                      aria-busy={reportStatus === 'submitting'}
+                      className="w-full bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-neutral-900"
                     >
                       {reportStatus === 'submitting' ? (
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" aria-hidden="true"></div>
                       ) : (
                         'Submit Secure Report'
                       )}
